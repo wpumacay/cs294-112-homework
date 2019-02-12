@@ -9,6 +9,13 @@ Example usage:
 Author of this script and included expert policies: Jonathan Ho (hoj@openai.com)
 """
 
+# hardcoded fix to load appropiate GLEW
+def loadDynamicDeps():
+    import ctypes
+
+    _libGlewLibraryPath = ctypes.util.find_library( 'GLEW' )
+    ctypes.CDLL( _libGlewLibraryPath, ctypes.RTLD_GLOBAL )
+
 import os
 import pickle
 import tensorflow as tf
@@ -69,8 +76,12 @@ def main():
         expert_data = {'observations': np.array(observations),
                        'actions': np.array(actions)}
 
+        if not os.path.exists( os.path.join( os.getcwd(), 'expert_data' ) ) :
+            os.makedirs( 'expert_data' )
+
         with open(os.path.join('expert_data', args.envname + '.pkl'), 'wb') as f:
             pickle.dump(expert_data, f, pickle.HIGHEST_PROTOCOL)
 
 if __name__ == '__main__':
+    loadDynamicDeps()
     main()
