@@ -9,13 +9,6 @@ Example usage:
 Author of this script and included expert policies: Jonathan Ho (hoj@openai.com)
 """
 
-# hardcoded fix to load appropiate GLEW
-def loadDynamicDeps():
-    import ctypes
-
-    _libGlewLibraryPath = ctypes.util.find_library( 'GLEW' )
-    ctypes.CDLL( _libGlewLibraryPath, ctypes.RTLD_GLOBAL )
-
 import os
 import pickle
 import tensorflow as tf
@@ -23,6 +16,9 @@ import numpy as np
 import tf_util
 import gym
 import load_policy
+from tqdm import tqdm
+
+import utils
 
 def main():
     import argparse
@@ -49,8 +45,8 @@ def main():
         returns = []
         observations = []
         actions = []
-        for i in range(args.num_rollouts):
-            print('iter', i)
+        for i in tqdm( range(args.num_rollouts) ):
+            ## print('iter', i)
             obs = env.reset()
             done = False
             totalr = 0.
@@ -64,14 +60,14 @@ def main():
                 steps += 1
                 if args.render:
                     env.render()
-                if steps % 100 == 0: print("%i/%i"%(steps, max_steps))
+                #if steps % 100 == 0: print("%i/%i"%(steps, max_steps))
                 if steps >= max_steps:
                     break
             returns.append(totalr)
 
-        print('returns', returns)
-        print('mean return', np.mean(returns))
-        print('std of return', np.std(returns))
+        ## print('returns', returns)
+        ## print('mean return', np.mean(returns))
+        ## print('std of return', np.std(returns))
 
         expert_data = {'observations': np.array(observations),
                        'actions': np.array(actions)}
@@ -83,5 +79,5 @@ def main():
             pickle.dump(expert_data, f, pickle.HIGHEST_PROTOCOL)
 
 if __name__ == '__main__':
-    loadDynamicDeps()
+    utils.loadDynamicDeps()
     main()
