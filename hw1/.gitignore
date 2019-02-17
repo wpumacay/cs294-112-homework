@@ -1,2 +1,3 @@
-expert_data/
+expert_data*
 MUJOCO_LOG.TXT
+*.h5
