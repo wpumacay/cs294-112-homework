@@ -1,11 +1,10 @@
 
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras import models
 from tensorflow.keras import callbacks
 
-class PolicyModel( object ) :
+class MlpPolicy( object ) :
 
     def __init__( self, obsDimension, actDimension ) :
         super( PolicyModel, self ).__init__()
@@ -19,16 +18,16 @@ class PolicyModel( object ) :
                                    optimizer = keras.optimizers.RMSprop( 0.001 ),
                                    metrics = ['mse'] )
 
-    def saveModel( self, savepath ) :
-        self._kerasModel.save( savepath )
+    def save( self, filepath ) :
+        self._kerasModel.save( filepath )
 
-    def loadModel( self, loadpath ) :
-        self._kerasModel = models.load_model( loadpath )
+    def load( self, filepath ) :
+        self._kerasModel = models.load_model( filepath )
 
     def act( self, obs ) :
         return self._kerasModel.predict( obs )
 
-    def train( self, experienceBatch ) :
+    def train( self, observations, actions ) :
         _actShape = experienceBatch['act'].shape
         self._kerasModel.fit( experienceBatch['obs'],
                               experienceBatch['act'].reshape( _actShape[0], 
