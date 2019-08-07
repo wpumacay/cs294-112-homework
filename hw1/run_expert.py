@@ -35,7 +35,7 @@ def run( env, policy, max_steps_per_episode, num_rollouts, results_filename, ren
             for istep in range( max_steps_per_episode ):
                 # get action from expert policy (input-shape: (batch,obs.shape))
                 action = np.squeeze( policy( obs[None,:] ) )
-                
+
                 # store this (o,a) pair for later usage
                 observations.append( obs )
                 actions.append( action )
@@ -49,12 +49,12 @@ def run( env, policy, max_steps_per_episode, num_rollouts, results_filename, ren
     
             returns.append( totalr )
     
-            expert_data = { 'observations' : np.array( observations ),
-                            'actions' : np.array( actions ),
-                            'returns' : np.array( returns ) }
+        expert_data = { 'observations' : np.array( observations ),
+                        'actions' : np.array( actions ),
+                        'returns' : np.array( returns ) }
     
-            with open( results_filename, 'wb') as fhandle :
-                pickle.dump( expert_data, fhandle, pickle.HIGHEST_PROTOCOL )
+        with open( results_filename, 'wb') as fhandle :
+            pickle.dump( expert_data, fhandle, pickle.HIGHEST_PROTOCOL )
 
 if __name__ == '__main__':
     utils.loadDynamicDeps()
@@ -70,6 +70,7 @@ if __name__ == '__main__':
 
     # create the appropriate environment
     env = gym.make( args.envname )
+    env.seed( 0 )
 
     # create the policy
     policy = load_policy.load_policy( args.expert_policy_file )
@@ -79,6 +80,8 @@ if __name__ == '__main__':
     max_steps_per_episode   = args.max_timesteps or env.spec.timestep_limit
     num_rollouts            = args.num_rollouts
     results_filename        = os.path.join( os.getcwd(), 
-                                            'data/experts/' + args.envname.split( '-' )[0].lower() + '.pkl' )
+                                            'data/experts/' + 
+                                            args.envname.split( '-' )[0].lower() + 
+                                            '_' + str( num_rollouts ) + '_.pkl' )
 
     run( env, policy, max_steps_per_episode, num_rollouts, results_filename, render )
