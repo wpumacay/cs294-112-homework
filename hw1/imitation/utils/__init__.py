@@ -8,7 +8,8 @@ def loadDynamicDeps():
     https://github.com/deepmind/dm_control/blob/978230f1376de1826c430dd3dfc0e3c7f742f5fe/dm_control/mujoco/wrapper/util.py#L100
     """
     import ctypes
+    from ctypes.util import find_library
 
-    _libGlewLibraryPath = ctypes.util.find_library( 'GLEW' )
+    _libGlewLibraryPath = find_library( 'GLEW' )
     ctypes.CDLL( _libGlewLibraryPath, ctypes.RTLD_GLOBAL )
 
