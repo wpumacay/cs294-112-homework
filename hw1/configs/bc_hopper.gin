@@ -3,14 +3,14 @@ import imitation.utils.config
 
 SEED = 0
 
-imitation.utils.config.TrainerConfig.expertPolicyFile   = 'Ant-v2.pkl'
-imitation.utils.config.TrainerConfig.expertDataFile     = 'ant_500.pkl'
-imitation.utils.config.TrainerConfig.environmentName    = 'Ant-v2'
+imitation.utils.config.TrainerConfig.expertPolicyFile   = 'Hopper-v2.pkl'
+imitation.utils.config.TrainerConfig.expertDataFile     = 'hopper_500.pkl'
+imitation.utils.config.TrainerConfig.environmentName    = 'Hopper-v2'
 imitation.utils.config.TrainerConfig.learningRate       = 0.0005
 imitation.utils.config.TrainerConfig.batchSize          = 64
 imitation.utils.config.TrainerConfig.numEpochs          = 4
 imitation.utils.config.TrainerConfig.seed               = %SEED
-imitation.utils.config.TrainerConfig.sessionID          = 'session_ant'
+imitation.utils.config.TrainerConfig.sessionID          = 'session_hopper'
 
 imitation.utils.config.BackboneConfig.observationsShape = (-1,)
 imitation.utils.config.BackboneConfig.actionsShape      = (-1,)

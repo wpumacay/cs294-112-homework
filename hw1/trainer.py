@@ -12,6 +12,9 @@ from IPython.core.debugger import set_trace
 from imitation.policies.pytorch import BackbonePytorchTest
 from imitation.policies.pytorch import ModelPytorch
 
+from imitation.policies.tensorflow import BackboneTensorflowTest
+from imitation.policies.tensorflow import ModelTensorflow
+
 from imitation.utils import loadDynamicDeps
 from imitation.utils.config import TrainerConfig
 from imitation.utils.config import BackboneConfig
@@ -90,7 +93,7 @@ if __name__ == '__main__':
     backboneConfig = BackboneConfig()
 
     TRAIN           = ( args.mode == 'train' )
-    SESSION_FOLDER  = os.path.join( RESULTS_FOLDER, trainerConfig.sessionID )
+    SESSION_FOLDER  = os.path.join( RESULTS_FOLDER, trainerConfig.sessionID + '_tf' )
     NUM_EPOCHS      = trainerConfig.numEpochs
 
     # create the appropriate environment
@@ -104,10 +107,15 @@ if __name__ == '__main__':
     backboneConfig.observationsShape = env.observation_space.shape
     backboneConfig.actionsShape = env.action_space.shape
 
+##    # create the backbone for our model
+##    backbone = BackbonePytorchTest( backboneConfig, lr = trainerConfig.learningRate, seed = trainerConfig.seed )
+##    # create the agent's model that uses this backbone
+##    model = ModelPytorch( backbone )
+
     # create the backbone for our model
-    backbone = BackbonePytorchTest( backboneConfig, lr = trainerConfig.learningRate, seed = trainerConfig.seed )
+    backbone = BackboneTensorflowTest( backboneConfig, lr = trainerConfig.learningRate, seed = trainerConfig.seed )
     # create the agent's model that uses this backbone
-    model = ModelPytorch( backbone )
+    model = ModelTensorflow( backbone )
 
     if TRAIN :
         # create data iterator from wrapping expert data

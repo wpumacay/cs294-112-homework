@@ -13,17 +13,12 @@ class Backbone( abc.ABC ) :
 
 
     @abc.abstractmethod
-    def save( self, filepath ) :
+    def save( self, filepath, **kwargs ) :
         pass
 
 
     @abc.abstractmethod
-    def load( self, filepath ) :
-        pass
-
-
-    @abc.abstractmethod
-    def forward( self, x ) :
+    def load( self, filepath, **kwargs ) :
         pass
 
 

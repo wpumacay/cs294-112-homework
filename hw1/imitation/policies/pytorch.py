@@ -24,11 +24,11 @@ class BackbonePytorch( core.Backbone, nn.Module ) :
         self._device = kwargs['device'] if 'device' in kwargs else DEFAULT_DEVICE
 
 
-    def save( self, filepath ) :
+    def save( self, filepath, **kwargs ) :
         torch.save( self.state_dict(), filepath )
 
 
-    def load( self, filepath ) :
+    def load( self, filepath, **kwargs ) :
         self.load_state_dict( torch.load( filepath, map_location = self._device.type ) )
 
 
@@ -117,6 +117,4 @@ class ModelPytorch( core.Model ) :
 
 
     def logs( self ) :
-        msg = 'train-loss = %.5f'
-
-        return msg % ( self._currentTrainLoss )
+        return 'train-loss = %.5f' % ( self._currentTrainLoss )
