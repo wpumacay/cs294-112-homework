@@ -62,13 +62,20 @@ class ModelPytorch( core.Model ) :
     def __init__( self, backbone, **kwargs ) :
         super( ModelPytorch, self ).__init__( backbone, **kwargs )
 
+        # torch.device to be used for trainint|testing
         self._device = kwargs['device'] if 'device' in kwargs else DEFAULT_DEVICE
+        # torch optimizer used to take a step of SGD
         self._optimizer = opt.Adam( self._backbone.parameters(), self._lr )
+        # must define file extensions use to save the model
         self._extension = '.pth'
+        # tensoboardX logger object (created once on request during training)
         self._logger = None
+
+        # some variables for logs and book keeping
         self._currentTrainLoss = 0.
         self._istep = 0
 
+        # work on the given device
         self._backbone.to( self._device )
 
 

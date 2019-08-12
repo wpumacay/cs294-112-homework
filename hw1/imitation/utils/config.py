@@ -12,7 +12,8 @@ class TrainerConfig( object ) :
                   batchSize = 64,
                   numEpochs = 10,
                   seed = 0,
-                  sessionID = 'session_ant' ) :
+                  sessionID = 'session_ant',
+                  backend = 'pytorch' ) :
         super( TrainerConfig, self ).__init__()
 
         self.expertPolicyFile = expertPolicyFile
@@ -23,6 +24,7 @@ class TrainerConfig( object ) :
         self.numEpochs = numEpochs
         self.seed = seed
         self.sessionID = sessionID
+        self.backend = backend
 
 
 @gin.configurable

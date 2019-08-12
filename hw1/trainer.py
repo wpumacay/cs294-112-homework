@@ -9,23 +9,35 @@ import numpy as np
 from tqdm import tqdm
 from IPython.core.debugger import set_trace
 
-from imitation.policies.pytorch import BackbonePytorchTest
-from imitation.policies.pytorch import ModelPytorch
-
-from imitation.policies.tensorflow import BackboneTensorflowTest
-from imitation.policies.tensorflow import ModelTensorflow
-
 from imitation.utils import loadDynamicDeps
 from imitation.utils.config import TrainerConfig
 from imitation.utils.config import BackboneConfig
 from imitation.utils.iterators import ExperienceDataIterator
 
-TRAIN           = True                  # flag use to determine the training mode
-EXP_DATA_FOLDER = 'data/experts/'       # folder where to find the experts' rollouts data
-RESULTS_FOLDER  = 'data/results/'       # fodler where the training results will be saved
-SESSION_FOLDER  = 'data/results/ant/'   # folder related to this training session
-NUM_EPOCHS      = 10                    # number of training epochs to run BCloning
+TRAIN           = True                          # flag use to determine the training mode
+EXP_DATA_FOLDER = 'data/experts/'               # folder where to find the experts' rollouts data
+RESULTS_FOLDER  = 'data/results/'               # fodler where the training results will be saved
+SESSION_FOLDER  = 'data/results/session_ant/'   # folder related to this training session
+NUM_EPOCHS      = 10                            # number of training epochs to run BCloning
 
+
+def createModel( backend, backboneConfig, learningRate, seed ) :
+    if backend == 'pytorch' :
+        from imitation.policies.pytorch import BackbonePytorchTest as BackboneT
+        from imitation.policies.pytorch import ModelPytorch as ModelT
+    elif backend == 'tensorflow' :
+        from imitation.policies.tensorflow import BackboneTensorflowTest as BackboneT
+        from imitation.policies.tensorflow import ModelTensorflow as ModelT
+    elif backend == 'keras' :
+        from imitation.policies.keras import BackboneKerasTest as BackboneT
+        from imitation.policies.keras import ModelKeras as ModelT
+
+    # create the backbone for our model
+    backbone = BackboneT( backboneConfig, lr = learningRate, seed = seed )
+    # create the agent's model that uses this backbone
+    model = ModelT( backbone )
+
+    return model
 
 def train( env, model, dataIterator, numEpochs, sessionFolder ) :
     progressbarEpoch = tqdm( range( numEpochs ), desc = 'Epoch>' )
@@ -93,7 +105,7 @@ if __name__ == '__main__':
     backboneConfig = BackboneConfig()
 
     TRAIN           = ( args.mode == 'train' )
-    SESSION_FOLDER  = os.path.join( RESULTS_FOLDER, trainerConfig.sessionID + '_tf' )
+    SESSION_FOLDER  = os.path.join( RESULTS_FOLDER, trainerConfig.sessionID + '_' + trainerConfig.backend )
     NUM_EPOCHS      = trainerConfig.numEpochs
 
     # create the appropriate environment
@@ -107,20 +119,13 @@ if __name__ == '__main__':
     backboneConfig.observationsShape = env.observation_space.shape
     backboneConfig.actionsShape = env.action_space.shape
 
-##    # create the backbone for our model
-##    backbone = BackbonePytorchTest( backboneConfig, lr = trainerConfig.learningRate, seed = trainerConfig.seed )
-##    # create the agent's model that uses this backbone
-##    model = ModelPytorch( backbone )
-
-    # create the backbone for our model
-    backbone = BackboneTensorflowTest( backboneConfig, lr = trainerConfig.learningRate, seed = trainerConfig.seed )
-    # create the agent's model that uses this backbone
-    model = ModelTensorflow( backbone )
+    # create the model using the appropriate configuration
+    model = createModel( trainerConfig.backend, backboneConfig, trainerConfig.learningRate, trainerConfig.seed )
 
     if TRAIN :
         # create data iterator from wrapping expert data
         dataFile = os.path.join( EXP_DATA_FOLDER, trainerConfig.expertDataFile )
-        dataIterator = iter( ExperienceDataIterator( dataFile, trainerConfig.batchSize ) )
+        dataIterator = iter( ExperienceDataIterator( dataFile, trainerConfig.batchSize, percent = 1.0 ) )
 
         train( env, model, dataIterator, NUM_EPOCHS, SESSION_FOLDER )
     else :

@@ -82,6 +82,6 @@ if __name__ == '__main__':
     results_filename        = os.path.join( os.getcwd(), 
                                             'data/experts/' + 
                                             args.envname.split( '-' )[0].lower() + 
-                                            '_' + str( num_rollouts ) + '_.pkl' )
+                                            '_' + str( num_rollouts ) + '.pkl' )
 
     run( env, policy, max_steps_per_episode, num_rollouts, results_filename, render )
