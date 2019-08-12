@@ -11,7 +11,9 @@ imitation.utils.config.TrainerConfig.batchSize          = 64
 imitation.utils.config.TrainerConfig.numEpochs          = 4
 imitation.utils.config.TrainerConfig.seed               = %SEED
 imitation.utils.config.TrainerConfig.sessionID          = 'session_halfcheetah'
-imitation.utils.config.TrainerConfig.backend            = 'keras
+imitation.utils.config.TrainerConfig.backend            = 'keras'
+imitation.utils.config.TrainerConfig.daggerNumEpisodes  = 10
+imitation.utils.config.TrainerConfig.daggerNumEpochs    = 5
 
 imitation.utils.config.BackboneConfig.observationsShape = (-1,)
 imitation.utils.config.BackboneConfig.actionsShape      = (-1,)

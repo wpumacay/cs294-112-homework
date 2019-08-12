@@ -73,6 +73,14 @@ def categorical_sample_logits(X):
 def get_session():
     return tf.get_default_session()
 
+def get_default_session() :
+    if tf.get_default_session() :
+        return tf.get_default_session()
+    else :
+        tf_config = tf.ConfigProto( inter_op_parallelism_threads = 1,
+                                    intra_op_parallelism_threads = 1 )
+        return tf.InteractiveSession( config = tf_config )
+
 def single_threaded_session():
     tf_config = tf.ConfigProto(
         inter_op_parallelism_threads=1,

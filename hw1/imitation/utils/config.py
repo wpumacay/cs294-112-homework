@@ -13,7 +13,9 @@ class TrainerConfig( object ) :
                   numEpochs = 10,
                   seed = 0,
                   sessionID = 'session_ant',
-                  backend = 'pytorch' ) :
+                  backend = 'pytorch',
+                  daggerNumEpisodes = 10,
+                  daggerNumEpochs = 5 ) :
         super( TrainerConfig, self ).__init__()
 
         self.expertPolicyFile = expertPolicyFile
@@ -25,6 +27,8 @@ class TrainerConfig( object ) :
         self.seed = seed
         self.sessionID = sessionID
         self.backend = backend
+        self.daggerNumEpisodes = daggerNumEpisodes
+        self.daggerNumEpochs = daggerNumEpochs
 
 
 @gin.configurable

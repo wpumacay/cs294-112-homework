@@ -1,0 +1,20 @@
+
+import imitation.utils.config
+
+SEED = 0
+
+imitation.utils.config.TrainerConfig.expertPolicyFile   = 'Reacher-v2.pkl'
+imitation.utils.config.TrainerConfig.expertDataFile     = 'reacher_500.pkl'
+imitation.utils.config.TrainerConfig.environmentName    = 'Reacher-v2'
+imitation.utils.config.TrainerConfig.learningRate       = 0.0005
+imitation.utils.config.TrainerConfig.batchSize          = 64
+imitation.utils.config.TrainerConfig.numEpochs          = 4
+imitation.utils.config.TrainerConfig.seed               = %SEED
+imitation.utils.config.TrainerConfig.sessionID          = 'session_reacher'
+imitation.utils.config.TrainerConfig.backend            = 'keras'
+imitation.utils.config.TrainerConfig.daggerNumEpisodes  = 10
+imitation.utils.config.TrainerConfig.daggerNumEpochs    = 5
+
+imitation.utils.config.BackboneConfig.observationsShape = (-1,)
+imitation.utils.config.BackboneConfig.actionsShape      = (-1,)
+imitation.utils.config.BackboneConfig.layersDefs        = []

@@ -96,6 +96,29 @@ class ExperienceDataIterator( object ) :
         return self._batchSize
 
 
+class DAggerExperienceDataIterator( ExperienceDataIterator ) :
+
+    def __init__( self, pickleFile, batchSize, percent = 1.0 ) :
+        super( DAggerExperienceDataIterator, self ).__init__( pickleFile, batchSize, percent )
+
+
+    def aggregate( self, X, Y ) :
+        # sanity check 1: both X and Y should have batch dims
+        assert ( X.ndim > 1 and Y.ndim > 1 ), 'ERROR> data to be aggregated must have batch dims'
+        # sanity check 2: both X and Y should have same batch-size
+        assert ( X.shape[0] == Y.shape[0] ), 'ERROR> data to be aggregated must have the same batch-size'
+
+        self._obsBuffer = np.concatenate( [self._obsBuffer, X], axis = 0 )
+        self._actBuffer = np.concatenate( [self._actBuffer, Y], axis = 0 )
+
+        # recompute size and indices
+        self._size = len( self._obsBuffer )
+        self._indices = np.arange( self._size )
+
+        # initialize the sampling again
+        self.shuffle()
+
+
 if __name__ == '__main__' :
     _dataPicklePath = '../../data/experts/ant.pkl'
     _dataIterator = ExperienceDataIterator( _dataPicklePath, 10 )
